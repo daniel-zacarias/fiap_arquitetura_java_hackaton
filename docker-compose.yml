@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+
+  python_carga:
+    build:
+      context: ./python_carga
+      dockerfile: Dockerfile
+    container_name: python_carga
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=hackaton_db
+      - DB_USER=user
+      - DB_PASSWORD=password
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - hackaton
+
+  db:
+    image: postgres:latest
+    container_name: hackaton_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=hackaton_db
+    volumes:
+      - ./database/ddl.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hackaton
+
+networks:
+  hackaton:
+    driver: bridge
