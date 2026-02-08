@@ -23,7 +23,7 @@ public class DefaultUpdatePacienteDoencaUseCase extends UpdatePacienteDoencaUseC
         final var pacienteDoenca = pacienteDoencaGateway.findById(pacienteDoencaId)
                 .orElseThrow(() -> NotFoundException.with(PacienteDoenca.class, pacienteDoencaId));
 
-        pacienteDoenca.update(DateUtils.parse(input.dataDiagnostico()));
+        pacienteDoenca.update(DateUtils.parse(input.dataDiagnostico()), input.ativo());
 
         return UpdatePacienteDoencaOutput.from(pacienteDoencaGateway.update(pacienteDoenca));
     }

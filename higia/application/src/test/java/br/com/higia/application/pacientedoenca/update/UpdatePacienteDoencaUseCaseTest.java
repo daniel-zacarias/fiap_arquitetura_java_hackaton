@@ -43,6 +43,7 @@ public class UpdatePacienteDoencaUseCaseTest extends UseCaseTest {
     public void givenAValidCommand_whenCallsUpdatePacienteDoenca_shouldReturnId() {
         final var expectedId = PacienteDoencaID.unique().getValue();
         final var expectedDataDiagnostico = "10/02/2021";
+        final var expectedAtivo = false;
 
         final var pacienteDoenca = PacienteDoenca.with(
                 expectedId,
@@ -54,7 +55,8 @@ public class UpdatePacienteDoencaUseCaseTest extends UseCaseTest {
 
         final var command = UpdatePacienteDoencaCommand.with(
                 expectedId,
-                expectedDataDiagnostico);
+                expectedDataDiagnostico,
+                expectedAtivo);
 
         when(pacienteDoencaGateway.findById(PacienteDoencaID.from(expectedId)))
                 .thenReturn(Optional.of(pacienteDoenca));
@@ -68,7 +70,8 @@ public class UpdatePacienteDoencaUseCaseTest extends UseCaseTest {
         assertEquals(expectedId, actualOutput.id());
 
         verify(pacienteDoencaGateway).update(argThat(updated -> updated.getId().getValue().equals(expectedId) &&
-                LocalDate.of(2021, 2, 10).equals(updated.getDataDiagnostico())));
+                LocalDate.of(2021, 2, 10).equals(updated.getDataDiagnostico()) &&
+                expectedAtivo == updated.isAtivo()));
     }
 
     @Test
@@ -77,7 +80,8 @@ public class UpdatePacienteDoencaUseCaseTest extends UseCaseTest {
 
         final var command = UpdatePacienteDoencaCommand.with(
                 expectedId,
-                "10/02/2021");
+                "10/02/2021",
+                true);
 
         when(pacienteDoencaGateway.findById(PacienteDoencaID.from(expectedId)))
                 .thenReturn(Optional.empty());

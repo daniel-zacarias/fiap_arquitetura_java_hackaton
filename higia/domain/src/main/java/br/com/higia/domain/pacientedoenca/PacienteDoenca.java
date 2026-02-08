@@ -78,8 +78,13 @@ public class PacienteDoenca extends AggregateRoot<PacienteDoencaID> {
                 pacienteDoenca.createdAt);
     }
 
-    public PacienteDoenca update(final LocalDate dataDiagnostico) {
+    public PacienteDoenca update(final LocalDate dataDiagnostico, final Boolean ativo) {
         this.dataDiagnostico = dataDiagnostico;
+        if (ativo != null && ativo) {
+            ativar();
+        } else if (ativo != null) {
+            desativar();
+        }
         selfValidate();
         return this;
     }
