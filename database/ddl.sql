@@ -45,6 +45,7 @@ CREATE TABLE prontuario (
     paciente_id UUID NOT NULL,
     ativo BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 
     CONSTRAINT fk_prontuario_paciente
         FOREIGN KEY (paciente_id) REFERENCES paciente(id)
