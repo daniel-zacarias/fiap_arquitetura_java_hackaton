@@ -1,5 +1,6 @@
 package br.com.higia.domain.utils;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -22,5 +23,12 @@ public class DateUtils {
             return null;
         }
         return date.format(FORMATTER);
+    }
+
+    public static Instant parseInstant(String date) {
+        if (date == null || date.isBlank()) {
+            return null;
+        }
+        return Instant.parse(date);
     }
 }
