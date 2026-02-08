@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
+
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private DateUtils() {
     }
 
@@ -11,7 +14,13 @@ public class DateUtils {
         if (date == null || date.isBlank()) {
             return null;
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return LocalDate.parse(date, formatter);
+        return LocalDate.parse(date, FORMATTER);
+    }
+
+    public static String format(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+        return date.format(FORMATTER);
     }
 }

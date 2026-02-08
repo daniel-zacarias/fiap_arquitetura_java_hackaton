@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetPacienteByIdUseCaseTest extends UseCaseTest {
 
     @InjectMocks
-    private DefaultPacienteGetByIdUseCase useCase;
+    private DefaultGetPacienteByIdUseCase useCase;
 
     @Mock
     private PacienteGateway pacienteGateway;
@@ -34,7 +34,7 @@ public class GetPacienteByIdUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidId_whenCallsGetPacienteById_shouldReturnPaciente() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final var expectedName = "João da Silva";
         final var expectedCpf = "39922782049";
         final var expectedDataNascimento = java.time.LocalDate.of(1990, 1, 1);
@@ -74,7 +74,7 @@ public class GetPacienteByIdUseCaseTest extends UseCaseTest {
     @Test
     public void givenAnInvalidId_whenCallsGetPacienteById_shouldReturnNotFoundException() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
 
         when(pacienteGateway.findById(PacienteID.from(expectedId)))
                 .thenReturn(Optional.empty());

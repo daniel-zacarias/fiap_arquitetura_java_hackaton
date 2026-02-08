@@ -8,6 +8,7 @@ CREATE TABLE paciente (
     cpf VARCHAR(11) UNIQUE NOT NULL,
     nacionalidade VARCHAR(50),
     cep VARCHAR(8),
+    endereco VARCHAR(100),
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

@@ -2,6 +2,8 @@ package br.com.higia.application.paciente.retrieve.get;
 
 import br.com.higia.domain.paciente.Paciente;
 
+import static br.com.higia.domain.utils.DateUtils.format;
+
 public record PacienteOutput(
         String id,
         String nome,
@@ -16,12 +18,12 @@ public record PacienteOutput(
         return new PacienteOutput(
                 paciente.getId().getValue(),
                 paciente.getNome(),
-                paciente.getDataNascimento() != null ? paciente.getDataNascimento().toString() : null,
-                paciente.getCpf() != null ? paciente.getCpf().getValue() : null,
+                format(paciente.getDataNascimento()),
+                paciente.getCpf().getValue(),
                 paciente.getNacionalidade(),
                 paciente.getCep(),
                 paciente.getEndereco(),
-                paciente.getCreatedAt() != null ? paciente.getCreatedAt().toString() : null,
-                paciente.getUpdatedAt() != null ? paciente.getUpdatedAt().toString() : null);
+                paciente.getCreatedAt().toString(),
+                 paciente.getUpdatedAt().toString());
     }
 }

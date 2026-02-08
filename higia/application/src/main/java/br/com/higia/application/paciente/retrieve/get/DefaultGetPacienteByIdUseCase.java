@@ -7,11 +7,11 @@ import br.com.higia.domain.paciente.PacienteID;
 
 import java.util.Objects;
 
-public class DefaultPacienteGetByIdUseCase extends GetPacienteByIdUseCase {
+public class DefaultGetPacienteByIdUseCase extends GetPacienteByIdUseCase {
 
     private final PacienteGateway pacienteGateway;
 
-    public DefaultPacienteGetByIdUseCase(final PacienteGateway pacienteGateway) {
+    public DefaultGetPacienteByIdUseCase(final PacienteGateway pacienteGateway) {
         this.pacienteGateway = Objects.requireNonNull(pacienteGateway);
     }
 

@@ -3,7 +3,9 @@ package br.com.higia.application.paciente.retrieve.list;
 import br.com.higia.application.UseCaseTest;
 import br.com.higia.domain.paciente.Paciente;
 import br.com.higia.domain.paciente.PacienteGateway;
+import br.com.higia.domain.paciente.PacienteID;
 import br.com.higia.domain.pagination.Pagination;
+import br.com.higia.domain.pagination.SearchQuery;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,8 +44,9 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
         final var expectedSort = "nome";
         final var expectedDirection = "asc";
 
+
         final var paciente1 = Paciente.with(
-                "550e8400-e29b-41d4-a716-446655440000",
+                PacienteID.unique().getValue(),
                 "João da Silva",
                 LocalDate.of(1990, 1, 1),
                 "39922782049",
@@ -54,7 +57,7 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
                 Instant.now());
 
         final var paciente2 = Paciente.with(
-                "550e8400-e29b-41d4-a716-446655440001",
+                PacienteID.unique().getValue(),
                 "Maria Souza",
                 LocalDate.of(1985, 5, 15),
                 "17048198060",
@@ -73,12 +76,13 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
         when(pacienteGateway.findAll(any()))
                 .thenReturn(pagination);
 
-        final var input = ListPacientesInput.with(
+        final var input = new SearchQuery(
                 expectedPage,
                 expectedPerPage,
                 expectedTerms,
                 expectedSort,
-                expectedDirection);
+                expectedDirection
+        );
 
         // when
         final var actualOutput = useCase.execute(input);
@@ -91,16 +95,17 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
         assertEquals(2, actualOutput.items().size());
 
         final var firstItem = actualOutput.items().get(0);
-        assertEquals("550e8400-e29b-41d4-a716-446655440000", firstItem.id());
-        assertEquals("João da Silva", firstItem.nome());
-        assertEquals("39922782049", firstItem.cpf());
-        assertEquals("Brasileiro", firstItem.nacionalidade());
+        assertEquals(paciente1.getId().getValue(), firstItem.id());
+        assertEquals(paciente1.getNome(), firstItem.nome());
+        assertEquals(paciente1.getCpf().getValue(), firstItem.cpf());
+        assertEquals(paciente1.getNacionalidade(), firstItem.nacionalidade());
 
         final var secondItem = actualOutput.items().get(1);
-        assertEquals("550e8400-e29b-41d4-a716-446655440001", secondItem.id());
-        assertEquals("Maria Souza", secondItem.nome());
-        assertEquals("17048198060", secondItem.cpf());
-        assertEquals("Brasileira", secondItem.nacionalidade());
+        assertEquals(paciente2.getId().getValue(), secondItem.id());
+        assertEquals(paciente2.getNome(), secondItem.nome());
+        assertEquals(paciente2.getCpf().getValue(), secondItem.cpf());
+        assertEquals(paciente2.getNacionalidade(), secondItem.nacionalidade());
+
 
         verify(pacienteGateway).findAll(any());
     }
@@ -124,7 +129,7 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
         when(pacienteGateway.findAll(any()))
                 .thenReturn(pagination);
 
-        final var input = ListPacientesInput.with(
+        final var input = new SearchQuery(
                 expectedPage,
                 expectedPerPage,
                 expectedTerms,
@@ -157,7 +162,7 @@ public class ListPacienteUseCaseTest extends UseCaseTest {
         when(pacienteGateway.findAll(any()))
                 .thenThrow(new RuntimeException("Database connection error"));
 
-        final var input = ListPacientesInput.with(
+        final var input = new SearchQuery(
                 expectedPage,
                 expectedPerPage,
                 expectedTerms,

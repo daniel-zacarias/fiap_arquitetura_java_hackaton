@@ -37,7 +37,7 @@ public class UpdatePacienteUseCaseTest extends UseCaseTest {
     @Test
     public void givenAValidCommand_whenCallsUpdatePaciente_shouldReturnPacienteId() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final var expectedName = "João da Silva Atualizado";
         final var expectedCpf = "39922782049";
         final var expectedDataNascimento = "01/01/1990";
@@ -91,7 +91,7 @@ public class UpdatePacienteUseCaseTest extends UseCaseTest {
     @Test
     public void givenAnInvalidId_whenCallsUpdatePaciente_shouldReturnNotFoundException() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final var expectedName = "João da Silva Atualizado";
         final var expectedCpf = "39922782049";
         final var expectedDataNascimento = "01/01/1990";
@@ -126,7 +126,7 @@ public class UpdatePacienteUseCaseTest extends UseCaseTest {
     @Test
     public void givenAInvalidName_whenCallsUpdatePaciente_shouldReturnNotificationException() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final String expectedName = null;
         final var expectedCpf = "39922782049";
         final var expectedDataNascimento = "01/01/1990";
@@ -172,7 +172,7 @@ public class UpdatePacienteUseCaseTest extends UseCaseTest {
     @Test
     public void givenAnInvalidCpf_whenCallsUpdatePaciente_shouldReturnNotificationException() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final var expectedName = "João da Silva Atualizado";
         final var invalidCpf = "11111111111";
         final var expectedDataNascimento = "01/01/1990";
@@ -218,7 +218,7 @@ public class UpdatePacienteUseCaseTest extends UseCaseTest {
     @Test
     public void givenAnEmptyName_whenCallsUpdatePaciente_shouldReturnNotificationException() {
         // given
-        final var expectedId = "550e8400-e29b-41d4-a716-446655440000";
+        final var expectedId = PacienteID.unique().getValue();
         final var expectedName = "";
         final var expectedCpf = "39922782049";
         final var expectedDataNascimento = "01/01/1990";

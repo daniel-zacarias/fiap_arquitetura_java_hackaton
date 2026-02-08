@@ -1,12 +1,8 @@
 package br.com.higia.application.paciente.create;
 
-import br.com.higia.domain.exceptions.NotificationException;
 import br.com.higia.domain.paciente.Paciente;
 import br.com.higia.domain.paciente.PacienteGateway;
 import br.com.higia.domain.utils.DateUtils;
-import br.com.higia.domain.validation.handler.Notification;
-
-import java.time.LocalDate;
 import java.util.Objects;
 
 public class DefaultCreatePacienteUseCase extends CreatePacienteUseCase {

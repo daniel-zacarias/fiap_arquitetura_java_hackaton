@@ -25,8 +25,31 @@ DOENCAS_CRONICAS = [
 ]
 
 CEPS_SP = [
-    '01000-000', '02000-000', '03000-000',
-    '04000-000', '05000-000', '06000-000'
+    '01000000', '02000000', '03000000',
+    '04000000', '05000000', '06000000'
+]
+
+ENDERECOS_SP = [
+    'Rua Augusta, 2000, Consolação, São Paulo',
+    'Avenida Paulista, 1000, Bela Vista, São Paulo',
+    'Rua Oscar Freire, 500, Pinheiros, São Paulo',
+    'Avenida Faria Lima, 1500, Itaim Bibi, São Paulo',
+    'Rua dos Pinheiros, 2500, Pinheiros, São Paulo',
+    'Avenida Brasil, 3000, Consolação, São Paulo',
+    'Rua Haddock Lobo, 800, Cerqueira César, São Paulo',
+    'Avenida Rebouças, 1200, Pinheiros, São Paulo',
+    'Rua Bela Cintra, 600, Consolação, São Paulo',
+    'Avenida Imirim, 1800, Vila Madalena, São Paulo',
+    'Rua Groenlândia, 400, Vila Madalena, São Paulo',
+    'Avenida Brigadeiro Faria Lima, 2200, Itaim Bibi, São Paulo',
+    'Rua Bandeira Paulista, 700, Itaim Bibi, São Paulo',
+    'Avenida Morumbi, 1400, Vila Olímpia, São Paulo',
+    'Rua Butantã, 250, Pinheiros, São Paulo',
+    'Avenida Santo Amaro, 1600, Santo Amaro, São Paulo',
+    'Rua Gaivota, 900, Itanhaém (zona), São Paulo',
+    'Avenida Presidente Wilson, 500, Centro, São Paulo',
+    'Rua 25 de Março, 800, Centro, São Paulo',
+    'Avenida São João, 1300, Centro, São Paulo',
 ]
 
 OBSERVACOES = [
@@ -66,8 +89,22 @@ def conectar_banco():
 
 
 def gerar_cpf():
-    """Gera um CPF válido para teste (11 dígitos)"""
-    return fake.cpf().replace('.', '').replace('-', '')
+    """Gera um CPF válido para testes"""
+    cpf = [random.randint(0, 9) for _ in range(9)]
+
+    # Primeiro dígito verificador
+    soma = sum(cpf[i] * (10 - i) for i in range(9))
+    resto = soma % 11
+    primeiro_digito = 0 if resto < 2 else 11 - resto
+    cpf.append(primeiro_digito)
+
+    # Segundo dígito verificador
+    soma = sum(cpf[i] * (11 - i) for i in range(10))
+    resto = soma % 11
+    segundo_digito = 0 if resto < 2 else 11 - resto
+    cpf.append(segundo_digito)
+
+    return ''.join(map(str, cpf))
 
 
 def gerar_cep():
@@ -77,7 +114,7 @@ def gerar_cep():
 # ==========================
 # INSERTS
 # ==========================
-def inserir_doencas_cronicas(cursor):
+def inserir_doencas_cronicas(cursor, conn):
     """Insere as doenças crônicas padrão"""
     print("Inserindo doenças crônicas...")
     ids = {}
@@ -94,15 +131,23 @@ def inserir_doencas_cronicas(cursor):
             )
         except psycopg2.Error as e:
             print(f"Erro ao inserir doença {doenca['nome']}: {e}")
+            conn.rollback()
+            cursor = conn.cursor()
+            continue
 
-    cursor.execute("SELECT id, cid10 FROM doenca_cronica")
-    for row in cursor.fetchall():
-        ids[row[1]] = row[0]
+    try:
+        cursor.execute("SELECT id, cid10 FROM doenca_cronica")
+        for row in cursor.fetchall():
+            ids[row[1]] = row[0]
+    except psycopg2.Error as e:
+        print(f"Erro ao selecionar doenças: {e}")
+        conn.rollback()
+        cursor = conn.cursor()
 
     return ids
 
 
-def inserir_pacientes(cursor, quantidade=20):
+def inserir_pacientes(cursor, conn, quantidade=20):
     """Insere pacientes com dados realistas"""
     print(f"Inserindo {quantidade} pacientes...")
     ids = []
@@ -114,25 +159,29 @@ def inserir_pacientes(cursor, quantidade=20):
         cpf = gerar_cpf()
         nacionalidade = 'Brasileira'
         cep = gerar_cep()
+        endereco = random.choice(ENDERECOS_SP)
         
         try:
             cursor.execute(
                 """
                 INSERT INTO paciente
-                (nome, data_nascimento, sexo, cpf, nacionalidade, cep)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                (nome, data_nascimento, sexo, cpf, nacionalidade, cep, endereco)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
                 RETURNING id
                 """,
-                (nome, data_nascimento, sexo, cpf, nacionalidade, cep)
+                (nome, data_nascimento, sexo, cpf, nacionalidade, cep, endereco)
             )
             ids.append(cursor.fetchone()[0])
         except psycopg2.Error as e:
             print(f"Erro ao inserir paciente: {e}")
+            conn.rollback()
+            cursor = conn.cursor()
+            continue
     
     return ids
 
 
-def inserir_paciente_doenca(cursor, pacientes_ids, doencas_ids):
+def inserir_paciente_doenca(cursor, conn, pacientes_ids, doencas_ids):
     """Associa doenças crônicas aos pacientes"""
     print("Associando doenças aos pacientes...")
     mapa_paciente_doencas = {}
@@ -160,11 +209,14 @@ def inserir_paciente_doenca(cursor, pacientes_ids, doencas_ids):
                 )
             except psycopg2.Error as e:
                 print(f"Erro ao associar doença ao paciente: {e}")
+                conn.rollback()
+                cursor = conn.cursor()
+                continue
 
     return mapa_paciente_doencas
 
 
-def inserir_prontuarios(cursor, pacientes_ids):
+def inserir_prontuarios(cursor, conn, pacientes_ids):
     """Cria prontuários para cada paciente"""
     print("Criando prontuários...")
     prontuarios = {}
@@ -182,11 +234,14 @@ def inserir_prontuarios(cursor, pacientes_ids):
             prontuarios[paciente_id] = cursor.fetchone()[0]
         except psycopg2.Error as e:
             print(f"Erro ao criar prontuário: {e}")
+            conn.rollback()
+            cursor = conn.cursor()
+            continue
     
     return prontuarios
 
 
-def inserir_evolucoes_clinicas(cursor, prontuarios, mapa_doencas):
+def inserir_evolucoes_clinicas(cursor, conn, prontuarios, mapa_doencas):
     """Insere histórico de evolução clínica realista"""
     print("Inserindo histórico clínico...")
     
@@ -223,6 +278,9 @@ def inserir_evolucoes_clinicas(cursor, prontuarios, mapa_doencas):
                 )
             except psycopg2.Error as e:
                 print(f"Erro ao inserir evolução clínica: {e}")
+                conn.rollback()
+                cursor = conn.cursor()
+                continue
 
 # ==========================
 # MAIN
@@ -238,11 +296,11 @@ def main():
     cursor = conn.cursor()
 
     try:
-        doencas_ids = inserir_doencas_cronicas(cursor)
-        pacientes_ids = inserir_pacientes(cursor, quantidade=20)
-        mapa_doencas = inserir_paciente_doenca(cursor, pacientes_ids, doencas_ids)
-        prontuarios = inserir_prontuarios(cursor, pacientes_ids)
-        inserir_evolucoes_clinicas(cursor, prontuarios, mapa_doencas)
+        doencas_ids = inserir_doencas_cronicas(cursor, conn)
+        pacientes_ids = inserir_pacientes(cursor, conn, quantidade=20)
+        mapa_doencas = inserir_paciente_doenca(cursor, conn, pacientes_ids, doencas_ids)
+        prontuarios = inserir_prontuarios(cursor, conn, pacientes_ids)
+        inserir_evolucoes_clinicas(cursor, conn, prontuarios, mapa_doencas)
 
         conn.commit()
         print("\n✓ Dados clínicos simulados inseridos com sucesso!")
