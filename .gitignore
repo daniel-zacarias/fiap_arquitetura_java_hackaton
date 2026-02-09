@@ -9,7 +9,7 @@ hs_err_pid*
 
 # Logs
 *.log
-
+.docker
 # IntelliJ IDEA
 **/.idea/*
 *.iml

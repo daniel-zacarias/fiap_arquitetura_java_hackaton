@@ -44,7 +44,7 @@ public class PacienteDoencaTest extends UnitTest {
 
         final var expectedDataDiagnostico = LocalDate.of(2021, 5, 20);
 
-        pacienteDoenca.update(expectedDataDiagnostico);
+        pacienteDoenca.update(expectedDataDiagnostico, true);
 
         assertEquals(expectedDataDiagnostico, pacienteDoenca.getDataDiagnostico());
     }

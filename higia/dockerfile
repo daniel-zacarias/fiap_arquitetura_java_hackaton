@@ -1,0 +1,34 @@
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+
+WORKDIR /workspace
+
+COPY pom.xml ./
+COPY domain/pom.xml domain/pom.xml
+COPY application/pom.xml application/pom.xml
+COPY infrastructure/pom.xml infrastructure/pom.xml
+
+RUN --mount=type=cache,target=/root/.m2 \
+	mvn -q -DskipTests -pl infrastructure -am dependency:go-offline
+
+COPY domain/src domain/src
+COPY application/src application/src
+COPY infrastructure/src infrastructure/src
+
+RUN --mount=type=cache,target=/root/.m2 \
+	mvn -q -DskipTests -pl infrastructure -am package
+
+FROM eclipse-temurin:21-jre
+
+ENV JAVA_OPTS=""
+
+RUN useradd --system --uid 10001 --gid 0 --home /app --shell /usr/sbin/nologin appuser
+
+WORKDIR /app
+
+COPY --from=builder /workspace/infrastructure/target/infrastructure-1.0-SNAPSHOT.jar /app/app.jar
+
+EXPOSE 8080
+
+USER appuser
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar /app/app.jar"]

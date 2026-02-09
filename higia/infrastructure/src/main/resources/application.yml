@@ -10,7 +10,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/hackaton_db
+    url: jdbc:postgresql://db:5432/hackaton_db
     username: ${sql.username:user}
     password: ${sql.password:password}
     hikari:
@@ -20,7 +20,6 @@ spring:
       maximum-pool-size: 20
       minimum-idle: 10
       pool-name: master
-
   jpa:
     open-in-view: false
     show-sql: true
@@ -30,3 +29,9 @@ spring:
       "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
       "[hibernate.generate_statistics]": false
       "[hibernate.connection.provider_disables_autocommit]": true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://keycloak:8080/realms/hegis/protocol/openid-connect/certs
+          issuer-uri: http://keycloak:8080/realms/hegis
