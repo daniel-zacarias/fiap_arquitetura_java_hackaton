@@ -31,10 +31,45 @@ Servicos e portas:
 O `docker-compose.yml` ja define as variaveis usadas pela API:
 
 - `KEYCLOAK_URL=http://keycloak:8080`
-- `KEYCLOAK_REALM=hegis`
+- `KEYCLOAK_REALM=hegia`
 - `KEYCLOAK_CLIENT_ID=hackaton_client`
 
-No Keycloak, garanta que o realm `hegis` existe e que o client `hackaton_client` esta configurado para emitir tokens.
+No Keycloak, garanta que o realm `hegia` existe e que o client `hackaton_client` esta configurado para emitir tokens.
+
+Tenha certeza que o usuário tenha permissão na pasta `.docker/keycloak` para persistir os dados do Keycloak.
+
+E ainda nessa pasta é possivel configurar o realm, clients e usuarios do Keycloak. O arquivo `realm-hegia.json` é importado automaticamente na primeira execucao do container.
+
+adicione o seguinte contéudo o (O Healm precisa ser o mesmo configurado na API, por padrão `hegia`): 
+```json
+{
+  "realm": "hegia",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "hackaton_client",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "users": [
+    {
+      "username": "hackaton_user",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "hackaton123", "temporary": false }
+      ]
+    }
+  ]
+}
+```
 
 ## Carga de dados (opcional)
 

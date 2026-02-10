@@ -9,10 +9,12 @@ server:
     context-path: /api
 
 spring:
+  profiles:
+    default: local
   datasource:
-    url: jdbc:postgresql://db:5432/hackaton_db
-    username: ${sql.username:user}
-    password: ${sql.password:password}
+    url: ${postgres.url:jdbc:postgresql://localhost:5432/hackaton_db}
+    username: ${postgres.username:user}
+    password: ${postgres.password:password}
     hikari:
       auto-commit: false
       connection-timeout: 250
@@ -33,5 +35,5 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak:8080/realms/hegis/protocol/openid-connect/certs
-          issuer-uri: http://keycloak:8080/realms/hegis
+          jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
+          issuer-uri: ${keycloak.host}/realms/${keycloak.realm}

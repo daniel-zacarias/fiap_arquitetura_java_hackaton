@@ -1,0 +1,8 @@
+postgres:
+  username: user
+  password: password
+  url: jdbc:postgresql://db:5432/hackaton_db
+
+keycloak:
+  realm: hegia
+  host: http://keycloak:8080
