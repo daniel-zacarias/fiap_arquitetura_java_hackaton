@@ -6,6 +6,7 @@ services:
       context: ./higia
       dockerfile: Dockerfile
     container_name: hackaton_api
+    profiles: [api]
     ports:
       - "8080:8080"
     environment:
@@ -53,7 +54,9 @@ services:
       - .docker/keycloak/import:/opt/keycloak/data/import:ro
     command:
       #      - start-dev # Utilizar esse comando quando a aplicacao estiver executando fora do Docker
-      - start-dev --import-realm --hostname-url=http://keycloak:8080 --hostname-admin-url=http://localhost:8443
+      # Caso execute com o profile local, mude o hostname-url para http://localhost:8443
+      # Caso execute com o profile docker, mude o hostname-url para http://keycloak:8080
+      - start-dev --import-realm --hostname-url=http://localhost:8443 --hostname-admin-url=http://localhost:8443
     networks:
       - hackaton
   db:
@@ -68,7 +71,7 @@ services:
     volumes:
       - ./database/ddl.sql:/docker-entrypoint-initdb.d/01-init.sql 
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U user -d hackaton_db"]
       interval: 10s
       timeout: 5s
       retries: 5

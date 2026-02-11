@@ -155,7 +155,7 @@ def inserir_pacientes(cursor, conn, quantidade=20):
     for _ in range(quantidade):
         nome = fake.name()
         data_nascimento = fake.date_of_birth(minimum_age=30, maximum_age=85)
-        sexo = random.choice(['M', 'F', 'O'])
+        sexo = random.choices(['M', 'F', 'O'], weights=[48, 48, 4], k=1)[0]
         cpf = gerar_cpf()
         nacionalidade = 'Brasileira'
         cep = gerar_cep()
