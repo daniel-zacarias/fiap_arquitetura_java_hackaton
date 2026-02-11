@@ -15,10 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import static br.com.higia.domain.utils.IdUtils.uuid;
-
 
 @Component
 public class PacientePostgresGateway implements PacienteGateway {
@@ -50,8 +48,7 @@ public class PacientePostgresGateway implements PacienteGateway {
         final var page = PageRequest.of(
                 query.page(),
                 query.perPage(),
-                Sort.by(Sort.Direction.fromString(query.direction()), query.sort())
-        );
+                Sort.by(Sort.Direction.fromString(query.direction()), query.sort()));
 
         final var where = Optional.ofNullable(query.terms())
                 .filter(str -> !str.isBlank())
@@ -64,8 +61,7 @@ public class PacientePostgresGateway implements PacienteGateway {
                 pageResult.getNumber(),
                 pageResult.getSize(),
                 pageResult.getTotalElements(),
-                pageResult.map(PacienteJpaEntity::toAggregate).toList()
-        );
+                pageResult.map(PacienteJpaEntity::toAggregate).toList());
 
     }
 
