@@ -4,6 +4,7 @@ import br.com.higia.domain.AggregateRoot;
 import br.com.higia.domain.doencacronica.DoencaCronicaID;
 import br.com.higia.domain.exceptions.NotificationException;
 import br.com.higia.domain.paciente.PacienteID;
+import br.com.higia.domain.utils.InstantUtils;
 import br.com.higia.domain.validation.ValidationHandler;
 import br.com.higia.domain.validation.handler.Notification;
 
@@ -42,14 +43,13 @@ public class PacienteDoenca extends AggregateRoot<PacienteDoencaID> {
             final PacienteID pacienteId,
             final DoencaCronicaID doencaCronicaId,
             final LocalDate dataDiagnostico) {
-        final var now = Instant.now();
         return new PacienteDoenca(
                 PacienteDoencaID.unique(),
                 pacienteId,
                 doencaCronicaId,
                 dataDiagnostico,
                 true,
-                now);
+                InstantUtils.now());
     }
 
     public static PacienteDoenca with(

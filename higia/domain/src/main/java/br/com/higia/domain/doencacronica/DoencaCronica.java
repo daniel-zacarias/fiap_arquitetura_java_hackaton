@@ -2,6 +2,7 @@ package br.com.higia.domain.doencacronica;
 
 import br.com.higia.domain.AggregateRoot;
 import br.com.higia.domain.exceptions.NotificationException;
+import br.com.higia.domain.utils.InstantUtils;
 import br.com.higia.domain.validation.ValidationHandler;
 import br.com.higia.domain.validation.handler.Notification;
 
@@ -35,8 +36,8 @@ public class DoencaCronica extends AggregateRoot<DoencaCronicaID> {
                 DoencaCronicaID.unique(),
                 nome,
                 cid10,
-                Instant.now(),
-                Instant.now());
+                InstantUtils.now(),
+                InstantUtils.now());
     }
 
     public static DoencaCronica with(
@@ -67,7 +68,7 @@ public class DoencaCronica extends AggregateRoot<DoencaCronicaID> {
             final String cid10) {
         this.nome = nome;
         this.cid10 = cid10;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         selfValidate();
         return this;
     }

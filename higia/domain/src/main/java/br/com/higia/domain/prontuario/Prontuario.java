@@ -4,6 +4,7 @@ import br.com.higia.domain.AggregateRoot;
 import br.com.higia.domain.exceptions.NotificationException;
 import br.com.higia.domain.evolucaoclinica.EvolucaoClinica;
 import br.com.higia.domain.paciente.PacienteID;
+import br.com.higia.domain.utils.InstantUtils;
 import br.com.higia.domain.validation.Error;
 import br.com.higia.domain.validation.ValidationHandler;
 import br.com.higia.domain.validation.handler.Notification;
@@ -41,7 +42,7 @@ public class Prontuario extends AggregateRoot<ProntuarioID> {
     }
 
     public static Prontuario newProntuario(final PacienteID pacienteId) {
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         return new Prontuario(
                 ProntuarioID.unique(),
                 pacienteId,
@@ -79,14 +80,14 @@ public class Prontuario extends AggregateRoot<ProntuarioID> {
 
     public Prontuario ativar() {
         this.ativo = true;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         selfValidate();
         return this;
     }
 
     public Prontuario desativar() {
         this.ativo = false;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         selfValidate();
         return this;
     }
@@ -100,7 +101,7 @@ public class Prontuario extends AggregateRoot<ProntuarioID> {
             throw notificationExceptionWithError("evolucao clinica nao pertence ao prontuario");
         }
         this.evolucoes.add(evolucao);
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         return evolucao;
     }
 

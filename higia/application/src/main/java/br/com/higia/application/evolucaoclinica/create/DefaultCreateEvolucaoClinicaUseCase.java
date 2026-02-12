@@ -3,8 +3,11 @@ package br.com.higia.application.evolucaoclinica.create;
 import br.com.higia.domain.evolucaoclinica.EvolucaoClinica;
 import br.com.higia.domain.evolucaoclinica.EvolucaoClinicaGateway;
 import br.com.higia.domain.prontuario.ProntuarioID;
+import br.com.higia.domain.utils.DateUtils;
+import br.com.higia.domain.utils.InstantUtils;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class DefaultCreateEvolucaoClinicaUseCase extends CreateEvolucaoClinicaUseCase {
@@ -19,7 +22,7 @@ public class DefaultCreateEvolucaoClinicaUseCase extends CreateEvolucaoClinicaUs
     public CreateEvolucaoClinicaOutput execute(final CreateEvolucaoClinicaCommand input) {
         final var evolucao = EvolucaoClinica.newEvolucaoClinica(
                 ProntuarioID.from(input.prontuarioId()),
-                parseInstant(input.dataAtendimento()),
+                InstantUtils.parseInstant(DateUtils.parse(input.dataAtendimento())),
                 input.pressaoSistolica(),
                 input.pressaoDiastolica(),
                 input.glicemia(),
@@ -29,10 +32,5 @@ public class DefaultCreateEvolucaoClinicaUseCase extends CreateEvolucaoClinicaUs
         return CreateEvolucaoClinicaOutput.from(evolucaoClinicaGateway.create(evolucao));
     }
 
-    private Instant parseInstant(final String value) {
-        if (value == null || value.isBlank()) {
-            return null;
-        }
-        return Instant.parse(value);
-    }
+
 }

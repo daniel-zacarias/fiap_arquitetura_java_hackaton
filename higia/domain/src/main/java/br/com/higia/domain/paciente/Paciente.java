@@ -2,6 +2,7 @@ package br.com.higia.domain.paciente;
 
 import br.com.higia.domain.AggregateRoot;
 import br.com.higia.domain.exceptions.NotificationException;
+import br.com.higia.domain.utils.InstantUtils;
 import br.com.higia.domain.validation.ValidationHandler;
 import br.com.higia.domain.validation.handler.Notification;
 
@@ -65,8 +66,8 @@ public class Paciente extends AggregateRoot<PacienteID> {
                 nacionalidade,
                 cep,
                 endereco,
-                Instant.now(),
-                Instant.now()
+                InstantUtils.now(),
+                InstantUtils.now()
         );
     }
 
@@ -123,7 +124,7 @@ public class Paciente extends AggregateRoot<PacienteID> {
         this.nacionalidade = nacionalidade;
         this.cep = cep;
         this.endereco = endereco;
-        this.updatedAt = Instant.now();
+        this.updatedAt = InstantUtils.now();
         selfValidate();
         return this;
     }

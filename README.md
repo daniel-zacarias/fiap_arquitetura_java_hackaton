@@ -38,7 +38,8 @@ No Keycloak, garanta que o realm `hegia` existe e que o client `hackaton_client`
 
 Tenha certeza que o usuário tenha permissão na pasta `.docker/keycloak` para persistir os dados do Keycloak.
 
-E ainda nessa pasta é possivel configurar o realm, clients e usuarios do Keycloak. O arquivo `realm-hegia.json` é importado automaticamente na primeira execucao do container.
+E ainda nessa pasta é possivel configurar o realm, clients e usuarios do Keycloak. O arquivo 
+`.docker/keycloak/import/realm-hegia.json` é importado automaticamente na primeira execucao do container.
 
 adicione o seguinte contéudo o (O Healm precisa ser o mesmo configurado na API, por padrão `hegia`): 
 ```json

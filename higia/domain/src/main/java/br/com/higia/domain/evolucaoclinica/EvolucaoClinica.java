@@ -3,6 +3,7 @@ package br.com.higia.domain.evolucaoclinica;
 import br.com.higia.domain.AggregateRoot;
 import br.com.higia.domain.exceptions.NotificationException;
 import br.com.higia.domain.prontuario.ProntuarioID;
+import br.com.higia.domain.utils.InstantUtils;
 import br.com.higia.domain.validation.ValidationHandler;
 import br.com.higia.domain.validation.handler.Notification;
 
@@ -66,7 +67,7 @@ public class EvolucaoClinica extends AggregateRoot<EvolucaoClinicaID> {
                 glicemia,
                 peso,
                 observacoes,
-                Instant.now());
+                InstantUtils.now());
     }
 
     public static EvolucaoClinica with(

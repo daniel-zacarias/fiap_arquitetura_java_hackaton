@@ -46,8 +46,8 @@ public class PacienteController implements PacienteAPI {
     public ResponseEntity<?> create(CreatePacienteRequest request) {
         final var aCommand = CreatePacienteCommand.with(
                 request.nome(),
-                request.dataNascimento(),
                 request.cpf(),
+                request.dataNascimento(),
                 request.nacionalidade(),
                 request.cep(),
                 request.endereco());

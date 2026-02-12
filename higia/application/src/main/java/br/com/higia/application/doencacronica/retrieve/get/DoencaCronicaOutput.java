@@ -13,7 +13,7 @@ public record DoencaCronicaOutput(
                 doenca.getId().getValue(),
                 doenca.getNome(),
                 doenca.getCid10(),
-                doenca.getCreatedAt() != null ? doenca.getCreatedAt().toString() : null,
-                doenca.getUpdatedAt() != null ? doenca.getUpdatedAt().toString() : null);
+                doenca.getCreatedAt().toString(),
+                doenca.getUpdatedAt().toString());
     }
 }
