@@ -60,7 +60,7 @@ services:
     networks:
       - hackaton
   db:
-    image: postgres:latest
+    image: postgres:17.2-alpine
     container_name: hackaton_db
     ports:
       - "5432:5432"
