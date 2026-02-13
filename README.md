@@ -91,6 +91,19 @@ adicione o seguinte contéudo o (O Healm precisa ser o mesmo configurado na API,
 }
 ```
 
+## Autenticação
+
+Para realizar chamadas autenticadas, obtenha um token JWT do Keycloak:
+
+```bash
+curl --location 'http://localhost:8443/realms/hegia/protocol/openid-connect/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--data-urlencode 'grant_type=password' \
+--data-urlencode 'client_id=hackaton_client' \
+--data-urlencode 'username=hackaton_user' \
+--data-urlencode 'password=hackaton123'
+```
+
 ## Carga de dados (opcional)
 
 O container `python_carga` gera dados ficticios e insere no banco. Para executar:
