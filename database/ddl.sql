@@ -74,3 +74,7 @@ CREATE INDEX idx_paciente_cpf ON paciente(cpf);
 CREATE INDEX idx_paciente_doenca_paciente ON paciente_doenca(paciente_id);
 CREATE INDEX idx_evolucao_prontuario ON evolucao_clinica(prontuario_id);
 CREATE INDEX idx_evolucao_data ON evolucao_clinica(data_atendimento);
+
+INSERT INTO doenca_cronica (nome, cid10) VALUES
+('Diabetes Mellitus', 'E11'),
+('Insuficiência Cardíaca', 'I50');

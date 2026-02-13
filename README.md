@@ -28,11 +28,30 @@ Servicos e portas:
 
 ## Configuracoes principais
 
+Caso queira utilizar a aplicação JAVA pelo docker, precisa alterar a configuração do `docker-compose.yml` o command de Keycloak para:
+
+```yaml
+start-dev --import-realm --hostname-url=http://keycloak:8080 --hostname-admin-url=http://localhost:8443
+```
+
+e executar com o profile `api`:
+```bash
+docker compose --profile api up --build
+```
+
+caso ocorra um erro para criar o volume, dê permissão para a pasta `.docker`:
+
+```bash
+chmod 777 .docker
+```
+
 O `docker-compose.yml` ja define as variaveis usadas pela API:
 
 - `KEYCLOAK_URL=http://keycloak:8080`
 - `KEYCLOAK_REALM=hegia`
 - `KEYCLOAK_CLIENT_ID=hackaton_client`
+
+
 
 No Keycloak, garanta que o realm `hegia` existe e que o client `hackaton_client` esta configurado para emitir tokens.
 
